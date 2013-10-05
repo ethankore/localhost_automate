@@ -1,0 +1,35 @@
+{
+   "manifest_version": 2,
+
+   "name": "Localhost Automate",
+   "version": "0.4",
+   "description": "Converts file URLs to http://localhost for developer testing purposes",
+
+   "permissions": [ 
+      "\u003Call_urls\u003E",
+      "tabs",
+      "storage"
+   ],
+
+   "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+   },
+
+   "icons": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+      },
+
+   "content_scripts": [ {
+      "js": [ "content.js" ],
+      "matches": [ "http://*/*", "https://*/*", "file://*/*", "file:///*/*" ],
+      "run_at": "document_start"
+   } ],   
+
+   "background": {
+      "persistent": true,
+      "scripts": [ "background.js" ]
+   }   
+}

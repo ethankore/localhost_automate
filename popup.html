@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/javascript" src="popup.js"></script>
+    <title>Localhost Converter</title>
+    <base target="_blank">
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+
+      #localhostPath {
+        width: 229px;
+        color: #7C7C7C;
+        border-radius: 4px;
+        padding-left: 3px;
+        height: 20px;
+        border: 1px solid #949494;
+      }
+      body {
+          text-align: center;
+      }
+
+      #about {
+          font-family: arial;
+          font-size: 10px;
+          text-align: right;
+          color: #575757;
+      }
+
+      #about-link, #extensions-link {
+          color: #0052FF;
+      }
+
+      input:focus {
+          outline: none;
+      }
+
+      #messages {
+        opacity: 1;
+        font-size: 13px;
+        margin: 0 auto;
+        width: 80%;
+        margin: 15px auto;
+        font-family: arial;
+        text-align: center;
+      }
+
+      #heading {
+          font-family: arial;
+          font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="heading" placeholder="aaaa">Please input the path to your localhost folder</p>
+    <input type="text" id="localhostPath"></input>
+    <input type="submit" value="Save" id="submitBtn"></input>
+    <p id="messages"></p>
+    <p id="about">Localhost Automate by <a id="about-link" href="http://www.talkoren.com" target="_blank">Tal Koren</a></p>
+
+
+  </body>
+</html>
+
