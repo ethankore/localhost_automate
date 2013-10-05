@@ -1,7 +1,5 @@
-Localhost Automate
-==================
-For Google Chrome
------------------
+Localhost Automate for Google Chrome
+====================================
 
 
 Problem
