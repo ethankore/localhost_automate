@@ -1,5 +1,8 @@
 Localhost Automate
 ==================
+For Google Chrome
+-----------------
+
 
 Problem
 -------
@@ -13,7 +16,7 @@ Solution
 
 Localhost Automate is what solves it.
 
-Localhost Automate provides an easier, more comfortable way to tell the browser to get the http://localhost up there instead of file://, as long as the web document is in the preconfigured folder.
+Localhost Automate is a Google Chrome extension, providing an easier, more comfortable way to tell the browser to get the http://localhost up there instead of file://, as long as the web document is in the preconfigured folder.
 
 Localhost Automate requires a valid path to your localhost folder (ie. d:\wwwroot), so afterwards, if you're opening a file under 'd:\wwwroot\Some_Project', the extension would redirect it to 'http://localhost/Some_Project'.
 
