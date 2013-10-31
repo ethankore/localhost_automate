@@ -74,6 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			var remainder = localhostEntry.substring(2);
 			var drive = localhostEntry.substring(1,0).toUpperCase() + ':';
 			var complete = drive + remainder;
+			if (complete.substring(complete.length - 1) == '/') {
+				complete = complete.replace(/[/]$/, '');
+			}
+
 			if (!localPathDisabled) { 
 				chrome.storage.local.set({'localhost_path': complete}, function(){
 					message('Settings saved!', 'blue');
