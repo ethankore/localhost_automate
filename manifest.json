@@ -2,7 +2,7 @@
    "manifest_version": 2,
 
    "name": "Localhost Automate",
-   "version": "0.5",
+   "version": "0.5.1",
    "description": "Converts file URLs to http://localhost for developer testing purposes",
 
    "permissions": [ 
