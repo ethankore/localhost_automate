@@ -1,33 +1,26 @@
 {
-   "manifest_version": 2,
-
-   "name": "Localhost Automate",
-   "version": "0.5.1",
-   "description": "Converts file URLs to http://localhost for developer testing purposes",
-
-   "permissions": [ 
-      "storage"
-   ],
-
+   "background": {
+      "persistent": true,
+      "scripts": [ "background.js" ]
+   },
    "browser_action": {
       "default_icon": "icon.png",
       "default_popup": "popup.html"
    },
-
-   "icons": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-      },
-
    "content_scripts": [ {
       "js": [ "content.js" ],
       "matches": [ "http://*/*", "https://*/*", "file://*/*", "file:///*/*" ],
       "run_at": "document_start"
-   } ],   
-
-   "background": {
-      "persistent": true,
-      "scripts": [ "background.js" ]
-   }   
+   } ],
+   "description": "Converts file URLs to http://localhost for developer testing purposes",
+   "icons": {
+      "128": "icon.png",
+      "16": "icon.png",
+      "48": "icon.png"
+   },
+   "manifest_version": 2,
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+   "name": "Localhost Automate",
+   "permissions": [ "storage" ],
+   "version": "0.7"
 }

@@ -1,66 +1,39 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-  <head>
-    <script type="text/javascript" src="popup.js"></script>
-    <title>Localhost Converter</title>
-    <base target="_blank">
-    <style>
-      body {
-        min-width: 357px;
-        overflow-x: hidden;
-      }
+<head>
+	<title>Localhost Automate</title>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="inc/jquery.min.js"></script>
+	<script type="text/javascript" src="popup.js"></script>
+	<link rel="stylesheet" href="inc/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="inc/bootstrap.min.css" />
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-      #localhostPath {
-        width: 229px;
-        color: #7C7C7C;
-        border-radius: 4px;
-        padding-left: 3px;
-        height: 20px;
-        border: 1px solid #949494;
-      }
-      body {
-          text-align: center;
-      }
-
-      #about {
-          font-family: arial;
-          font-size: 10px;
-          text-align: right;
-          color: #575757;
-      }
-
-      #about-link, #extensions-link {
-          color: #0052FF;
-      }
-
-      input:focus {
-          outline: none;
-      }
-
-      #messages {
-        opacity: 1;
-        font-size: 13px;
-        margin: 0 auto;
-        width: 80%;
-        margin: 15px auto;
-        font-family: arial;
-        text-align: center;
-      }
-
-      #heading {
-          font-family: arial;
-          font-size: 14px;
-      }
-    </style>
-  </head>
-  <body>
-    <p id="heading" placeholder="aaaa">Please input the path to your localhost folder</p>
-    <input type="text" id="localhostPath"></input>
-    <input type="submit" value="Save" id="submitBtn"></input>
-    <p id="messages"></p>
-    <p id="about">Localhost Automate by <a id="about-link" href="http://www.talkoren.com" target="_blank">Tal Koren</a></p>
+	<div id="la-wrapper">
+		
+		<div id="la-header">
+			<div class="section-header form-item">Localhost directory</div>
+			<div class="section-header form-item">Localhost URL</div>
+		</div>
+		<div id="la-addresses-wrapper"></div>
+		<div id="la-footer">
+			<button id="addAnother" type="button" class="btn-primary">Add another</button>
+			<button id="saveAddresses" type="button" class="btn-primary">Save entries</button>
+			<br>
+			<div id="messages-wrapper">
+				<span id="messages"></span>
+			</div>
+			<div id="about">
+				Localhost Automate by <a href="http://www.talkoren.com" target="_blank">Tal Koren</a>
+			</div>
+		</div>
+		
 
 
-  </body>
+
+	</div>
+
+</body>
 </html>
-

@@ -1,7 +1,60 @@
-#localhostPath {
-    width: 229px;
+div#la-wrapper {
+    margin: 10px;
 }
-body {
+
+#la-footer button {
+    display: block;
+    width: 190px;
+    clear: both;
+    margin: 5px auto;
+}
+
+div#la-footer {
+    text-align: center;
+    clear: both;
+    padding-top: 1px;
+}
+
+.form-control {
+}
+
+.form-item {
+    width: 41%;
+    float: left;
+    margin: 5px 2px;
+}
+
+.section-header {
     text-align: center;
 }
 
+span#messages {
+    display: none;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.removeWrapper {
+    float: left;
+    width: 16%;
+    height: 30px;
+    margin: 7px 0 0 0;
+}
+
+div#la-addresses-wrapper {
+    width: 500px;
+}
+
+div#about {
+    float: right;
+    margin-bottom: 5px;
+}
+
+div#messages-wrapper {
+    min-height: 30px;
+    margin-top: -19px;
+}
+
+a#extensions-link {
+    cursor: pointer;
+}

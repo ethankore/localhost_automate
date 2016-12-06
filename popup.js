@@ -1,88 +1,220 @@
-document.addEventListener('DOMContentLoaded', function () {
+function Automate(options) {
 
-	// Initialization
-	var localPath = document.getElementById('localhostPath');
-	var submit = document.getElementById('submitBtn');
-	var messages = document.getElementById('messages');
-	var retrievedLocal;
-	var localPathDisabled;
+	var options = options || {};
 
-	// Get current path from local storage
-	chrome.storage.local.get('localhost_path', function(result){
-		if (result.localhost_path) {
-			localPath.value = result.localhost_path;
-			retrievedLocal = result.localhost_path;
-		} else {
-			localPath.value = '';
-		}
-	});
+	this.options = {
+		debug: false,
+		errorsElement: '',
+		onInit: function(){}
+	};
 
-	// Configure messages area
-	function message(message, color) {
-		messages.innerHTML = message;
-		messages.style.color = color;
+	for(var i in options) {
+		this.options[i] = options[i];
 	}
 
-	// Defines link to Extensions page
-	function exLink() {
-		var exLink = document.getElementById('extensions-link');
-		exLink.addEventListener('click', function(){
-			chrome.tabs.update({ url: 'chrome://chrome/extensions/?id=ghblhcbjlbbooajbgimdpijdcpjfjege' });
-		});		
-	}
+	var userAddresses = [];
 
-	// Check if user allowed access to file URLs via the Extensions page
-	chrome.extension.isAllowedFileSchemeAccess(function(result){
-		if (result == false) {
-			message('Please check the "Allow access to file URLs" checkbox in the <a id="extensions-link" href="javascript:void(0);">Extensions</a> page.', 'red');
-			localPath.disabled = true;
-			localPathDisabled = true;
-		}
+	this.saveAddresses = function(obj, callback){
 
-		exLink();
-	});	
+		var callback = callback || function(){};
 
-	// UI
-	localPath.addEventListener('click', function(){
-		localPath.style.color = '#000000';
-	});
+		chrome.storage.local.set({ localhostAddresses: obj }, function(response){
+			callback.call(this, response);
+		});
+	};
 
-	localPath.addEventListener('mousedown', function(){
-		localPath.style.color = '#000000';
-	});
+	this.removeAddress = function(localDirectory, callback){
 
-	localPath.addEventListener('blur', function(){
-		if (localPath.value == retrievedLocal) {
-			localPath.style.color = '#949494';
-		} else {
-			localPath.style.color = '#000000';
-		}
-	});	
+		var callback = callback || function(){};
 
-	// Set local storage
-	submit.addEventListener('click', function(){
-		if(localPath.value == "") {
-			message('Please provide a localhost path', 'red');			
-			return false;
-		} else if (localPathDisabled == true) {
-			message('Please check the "Allow access to file URLs" checkbox in the <a id="extensions-link" href="javascript:void(0);">Extensions</a> page.', 'red');
-			exLink();
-			return false;
-		} else {
-			var localhostEntry = localPath.value;
-			localhostEntry = localhostEntry.replace(/\\/g, '/');
-			var remainder = localhostEntry.substring(2);
-			var drive = localhostEntry.substring(1,0).toUpperCase() + ':';
-			var complete = drive + remainder;
-			if (complete.substring(complete.length - 1) == '/') {
-				complete = complete.replace(/[/]$/, '');
+		chrome.storage.local.get({ localhostAddresses: [] }, function(response) {
+
+			userAddresses = response.localhostAddresses;
+
+			for(var i in userAddresses) {
+				if(userAddresses[i].localDirectory == localDirectory) {
+					userAddresses.splice(i, 1);
+
+					chrome.storage.local.set({ localhostAddresses: userAddresses }, function(response) {
+						callback.call(this, response);
+					});
+				}
 			}
 
-			if (!localPathDisabled) { 
-				chrome.storage.local.set({'localhost_path': complete}, function(){
-					message('Settings saved!', 'blue');
+			return this;
+
+		});
+
+	};
+
+	this.getAddresses = function(callback){
+
+		var callback = callback || function(){};
+
+		chrome.storage.local.get(null, function(response){
+			callback.call(this, response);
+		});
+
+		return this;
+	}.bind(this);
+
+	this.removeAll = function(callback){
+
+		var callback = callback || function(){};
+
+		chrome.storage.local.remove('localhostAddresses');
+		callback.call(this);
+
+		return this;
+
+	}.bind(this);
+
+	this.message = function(message, color, fadeOut){
+		var fadeOut = fadeOut || false;
+
+		if(!!this.options.debug)
+			console.log(message);
+		else {
+			$(this.options.errorsElement).fadeIn().html(message).css('color', color);
+			setTimeout(function(){
+				if(!!fadeOut) {
+					$(this.options.errorsElement).fadeOut(250, function(){
+						$(this.options.errorsElement).html('').css('color', '#000000');
+					}.bind(this));
+				}
+			}.bind(this), 3000);
+		}
+
+	}.bind(this);
+
+	this.options.onInit();
+
+	return this;
+
+}
+
+var fieldWrapper =  '<div class="localhost-address-wrapper">';
+	fieldWrapper += '	<input placeholder="e.g. d:/xampp/htdocs/" type="text" class="form-control form-item localhost-directory" />';
+	fieldWrapper += '	<input placeholder="e.g. localhost" type="text" class="form-control form-item localhost-url" />';
+	fieldWrapper += '	<button class="btn btn-danger removeWrapper">Remove</button>';
+	fieldWrapper += '</div>';
+
+$(document).ready(function() {
+
+	var la = new Automate({
+		debug: false,
+		errorsElement: '#messages'
+	});
+
+	la.getAddresses(function(response){
+
+		if($.isEmptyObject(response.localhostAddresses) && $.isEmptyObject(response.localhost_path)) {
+			$('#la-addresses-wrapper').append(fieldWrapper);
+			return;
+		}
+
+		if(!$.isEmptyObject(response.localhost_path)) {
+			var oldPath = response.localhost_path,
+				newArr = [];
+
+			chrome.storage.local.remove('localhost_path', function(){
+				newArr.push({
+					localDirectory: oldPath,
+					httpAddress: 'localhost'
 				});
-			}			
+
+				chrome.storage.local.set({ localhostAddresses: newArr }, function(){
+					$('#la-addresses-wrapper').append(fieldWrapper);
+					$('.localhost-directory').last().val(oldPath);
+					$('.localhost-url').last().val('localhost');
+				});
+			});
+		}
+
+		if(!$.isEmptyObject(response.localhostAddresses)) {
+			$.each(response.localhostAddresses, function(index, val) {
+				$('#la-addresses-wrapper').append(fieldWrapper);
+				$('.localhost-directory').last().val(val.localDirectory);
+				$('.localhost-url').last().val(val.httpAddress);
+			});
+		}
+
+	});
+
+	$('#saveAddresses').click(function(){
+
+		var localDirectory,
+			httpAddress,
+			addressesArr = [],
+			saveSuccessful = false;
+
+		$('.localhost-address-wrapper').each(function(index, el) {
+
+			localDirectory = ($(el).find('.localhost-directory').val().length ? $(el).find('.localhost-directory').val() : '');
+			httpAddress = ($(el).find('.localhost-url').val().length ? $(el).find('.localhost-url').val() : '');
+
+			if(!!localDirectory.length && !!httpAddress.length) {
+				var localhostEntry,
+				finalDirectory,
+				remainder,
+				drive;
+
+				localhostEntry = localDirectory;
+				localhostEntry = localhostEntry.replace(/\\/g, '/');
+				remainder = localhostEntry.substring(2);
+				drive = localhostEntry.substring(1,0).toUpperCase() + ':';
+				finalDirectory = drive + remainder;
+				if (finalDirectory.substring(finalDirectory.length - 1) == '/') {
+					finalDirectory = finalDirectory.replace(/[/]$/, '');
+				}
+
+				addressesArr.push({
+					localDirectory: finalDirectory,
+					httpAddress: httpAddress
+				});
+
+				saveSuccessful = true;
+
+			}
+
+		});
+
+		if(!!saveSuccessful) {
+			la.saveAddresses(addressesArr, function(){
+				la.message('Addresses saved successfully.', 'green', true);
+			});
+		}
+
+	});
+
+	$('#addAnother').click(function(){
+		$('#la-addresses-wrapper').append(fieldWrapper);
+	});
+
+	$('#extensions-link').live('click', function(){
+		chrome.tabs.create({
+			'url': 'chrome://extensions'
+		});		
+	});
+
+	$('.removeWrapper').live('click', function(){
+		if($('.localhost-address-wrapper').length <= 1) {
+			$('.form-item').val('');
+			la.removeAll();
+		}
+		else {
+			la.removeAddress($(this).parent().find('.localhost-directory').val());
+			$(this).parent().remove();
+		}
+
+		la.message('Entry removed successfully.', 'green', true);
+	});
+
+	chrome.extension.isAllowedFileSchemeAccess(function(response){
+		if (!response) {
+			la.message('Please check the "Allow access to file URLs" checkbox in the <a id="extensions-link">Extensions</a> page.', 'red');
+			$('div, button, input').off().val();
 		}
 	});
+
 });
